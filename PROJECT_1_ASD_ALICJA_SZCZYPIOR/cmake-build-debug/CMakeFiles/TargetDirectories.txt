@@ -1,0 +1,3 @@
+/Users/ala/CLionProjects/PROJECT_1/SORTING_PROGRAM/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/ala/CLionProjects/PROJECT_1/SORTING_PROGRAM/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/ala/CLionProjects/PROJECT_1/SORTING_PROGRAM/cmake-build-debug/CMakeFiles/SORTING_PROGRAM.dir

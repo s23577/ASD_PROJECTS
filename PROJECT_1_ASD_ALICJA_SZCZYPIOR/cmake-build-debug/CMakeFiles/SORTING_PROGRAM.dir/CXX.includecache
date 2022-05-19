@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/ala/CLionProjects/PROJECT_1/SORTING_PROGRAM/main.cpp
+iostream
+-
+fstream
+-
+vector
+-
+iterator
+-
+chrono
+-
+
