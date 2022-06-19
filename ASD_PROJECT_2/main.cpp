@@ -3,6 +3,7 @@
 #include <iterator>
 #include <string>
 #include <map>
+#include <sstream>
 
 using namespace std;
 int const characterAmount = 54;
@@ -103,25 +104,29 @@ std::map<string, std::string> printCodes(TNode *node, string value) {
 
 
 int main() {
-//    //___OPENING FILE___
-//    fstream newFile;
-//    string characters;
-//    newFile.open("myText.txt", ios::in); //open a file to perform read operation using file object
-//    if (newFile.is_open()) { //checking whether the file is open
-//        while (getline(newFile, characters)) { //read data from file object and put it into string.
-//            cout << characters << "\n"; //print the data of the string
-//        }
-//        newFile.close(); //close the file object.
-//    } else {
-//        cout << "Unable to open file" << endl;
-//    }
+    //___OPENING FILE___
+    fstream newFile;
+    string characters;
+    newFile.open("myText.txt", ios::in); //open a file to perform read operation using file object
+    if (newFile.is_open()) { //checking whether the file is open
+        while (getline(newFile, characters)) { //read data from file object and put it into string.
+            cout << characters << "\n"; //print the data of the string
+        }
+        newFile.close(); //close the file object.
+    } else {
+        cout << "Unable to open file" << endl;
+    }
+    cout << "CHARACTERS SIZE= " << characters.size() << endl;
     //string do skompresowania
-    string characters = "Barbara ma rabarbar";
+//    string characters = "Barbara ma rabarbar";
 
     //___CREATE PATTERN ARRAY___ tablica odniesienia
-    string charPattern = "abmr B";
-    int arraySize = charPattern.size();
-    int charsArrayWithAmount[arraySize][2];
+    string charPattern = "Barbm ";
+    int charPatternSize = charPattern.size();
+    cout << "CHAR PATTERN SIZE=" << charPatternSize << endl;
+    int charsArrayWithAmount[charPatternSize][2];
+    cout << "CHARS ARRAY WITH AMOUNT AMOUNT SIZE= "
+         << sizeof(charsArrayWithAmount) / sizeof(charsArrayWithAmount[0][0]) - 1 << endl;
     for (int i = 0; i < charPattern.size(); i++) {
         charsArrayWithAmount[i][0] = charPattern[i];
         charsArrayWithAmount[i][1] = 0;
@@ -144,7 +149,6 @@ int main() {
             }
         }
     }
-
     //___CHECKING PATTERN ARRAY___ wydrukuj uzupelniona tablice odniesienia
     for (int i = 0; i < charPattern.size(); i++) {
         cout << "AFTER cAWA" << i << "= " << charsArrayWithAmount[i][0] << " repeats= " << charsArrayWithAmount[i][1]
@@ -153,7 +157,8 @@ int main() {
 
     //HUFFMANN ALGORYTHM
     cout << "PRZED KOPCOWANIEM:" << endl;
-    int size = sizeof(charsArrayWithAmount) / sizeof(charsArrayWithAmount[0]) - 1;
+//    int size = sizeof(charsArrayWithAmount) / sizeof(charsArrayWithAmount[0]) - 1; //to DELETE
+    int size = charPatternSize - 1;
     cout << "size before: " << size << endl;
     for (int i = 0; i <= size; i++) {
         cout << "wiersz: " << i << " : ";
@@ -280,9 +285,9 @@ int main() {
             cout << endl;
         }
     }
-    //drokowanie tablicy ze strukturami (nodeami)
+    //drukowanie tablicy ze strukturami (nodeami)
     for (int repeat = 0; repeat < size; repeat++) {
-        cout << "NODE_Z :" << &nodesTab[repeat] << " " << repeat << " key=" << nodesTab[repeat].key
+        cout << "NODE_Z :" << " " << repeat << "address" << &nodesTab[repeat] << " key=" << nodesTab[repeat].key
              << ", : << frequency="
              << nodesTab[repeat].frequency << ", left child=" << nodesTab[repeat].left << " "
              << nodesTab[repeat].left->key << ", right child= "
@@ -291,13 +296,59 @@ int main() {
     cout << "-------------- MAPA -------------" << endl;
     //DRUKOWANIE MAPY DO SPRAWDZENIA
     std::map<string, std::string> codes = printCodes(&nodesTab[size - 1], "");
-    map<string, std::string>::iterator it;
-    for (it = codes.begin(); it != codes.end(); it++) {
-        std::cout << (char) stoi(it->first)
-                  << ":"
-                  << it->second
-                  << std::endl;
+    {
+        map<string, std::string>::iterator it;
+        for (it = codes.begin(); it != codes.end(); it++) {
+            std::cout << (char) stoi(it->first)
+                      << ":"
+                      << it->second
+                      << std::endl;
+        }
     }
+    //tworzenie nowego stringa z 0 i 1
+    string binaryString;
+    for (int i = 0; i <= characters.size(); i++){
+        map<string, std::string>::iterator it;
+        for (it = codes.begin(); it != codes.end(); it++) {
+            if(characters[i] == stoi(it->first)){
+                binaryString.append(it->second);
+            }
+        }
+    }
+    cout << "\n\nOUT: " << binaryString << endl;
+
+    //tworzenie tablicy booleans
+    bool tmp[binaryString.size()]; // tmp has actual values in it, this is just used to show what are tmp and size
+    for(int i = 0; i< binaryString.size(); i++){
+        tmp[i] = binaryString[i] == '1';
+//        istringstream(binaryString[i]) >> tmp[i];
+        cout << tmp[i];
+    }
+    //cout << tmp[0];
+
+
+    //zapis do pliku słownika
+//    ofstream outfile("result.txt");
+//    {
+//        map<string, std::string>::iterator it;
+//        for (it = codes.begin(); it != codes.end(); it++) {
+//            string tempS = it->first;
+//            outfile << tempS;
+//            outfile << ": ";
+//            outfile << it->second;
+//            outfile << std::endl;
+//        }
+//    }
+//    outfile.close();
+    FILE* f = fopen("result.txt", "wba");
+    for (int i=0; i<binaryString.size(); i+=8) {
+        char q = 0;
+        for (int j=7; j>=0; j--)
+        q |= tmp[7-j+i]<<j ;
+        fwrite(&q, 1, 1, f);
+        //fwrite("\n", sizeof(char), 1, f); // insert new line
+    }
+    fclose(f);
 
     return 0;
 }
