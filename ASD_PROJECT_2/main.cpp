@@ -117,8 +117,6 @@ int main() {
         cout << "Unable to open file" << endl;
     }
     cout << "CHARACTERS SIZE= " << characters.size() << endl;
-    //string do skompresowania
-//    string characters = "Barbara ma rabarbar";
 
     //___CREATE PATTERN ARRAY___ tablica odniesienia
     string charPattern = "Barbm ";
@@ -167,7 +165,7 @@ int main() {
         }
         cout << endl;
     }
-    //KOPCOWANIE przed rozpoczeciem algorytmu huffmana
+    //KOPCOWANIE przed rozpoczeciem algorytmu Huffmana
     buildMINHeap(charsArrayWithAmount, size);
 
     cout << endl << "PO KOPCOWANIU:" << endl;
@@ -181,6 +179,7 @@ int main() {
     }
 
     //----HUFFMAN ALGORYTM----
+    int kTemp;
     int tempSize = size;
     //tablica node (węzłów)
     TNode nodesTab[100];
@@ -213,10 +212,12 @@ int main() {
             }
         }
 
-        //make array ready to heap again
+        //make array ready to extract R
         alterArray(charsArrayWithAmount, tempSize);
         tempSize--;
-        buildMINHeap(charsArrayWithAmount, tempSize);
+//        kTemp = (tempSize / 2) - 2;
+        MIN_HEAPIFY(charsArrayWithAmount, tempSize, 0);
+//        buildMINHeap(charsArrayWithAmount, tempSize);
 
         //----extract R----
         int min_R_Letter = extractMinLetter(charsArrayWithAmount);
@@ -238,10 +239,12 @@ int main() {
             }
         }
 
-        //make array ready to heap again
+        //make array ready to add node Z (so last element is moved to first element if tab
         alterArray(charsArrayWithAmount, tempSize);
         tempSize--;
-        buildMINHeap(charsArrayWithAmount, tempSize);
+//        kTemp = (tempSize / 2) - 2;
+//        MIN_HEAPIFY(charsArrayWithAmount, tempSize, kTemp);
+//        buildMINHeap(charsArrayWithAmount, tempSize);
 
         //create node_Z = add L and R
         TNode *node_Z = new TNode;
@@ -328,19 +331,20 @@ int main() {
 
 
     //zapis do pliku słownika
-//    ofstream outfile("result.txt");
-//    {
-//        map<string, std::string>::iterator it;
-//        for (it = codes.begin(); it != codes.end(); it++) {
-//            string tempS = it->first;
-//            outfile << tempS;
-//            outfile << ": ";
-//            outfile << it->second;
-//            outfile << std::endl;
-//        }
-//    }
-//    outfile.close();
-    FILE* f = fopen("result.txt", "wba");
+    ofstream outfile("result.txt");
+    {
+        map<string, std::string>::iterator it;
+        for (it = codes.begin(); it != codes.end(); it++) {
+            char tempS = (1, (char) stoi(it->first));
+//            string tempS = (string) stoi (tempC);
+            outfile << tempS;
+            outfile << ": ";
+            outfile << it->second;
+            outfile << std::endl;
+        }
+    }
+    outfile.close();
+    FILE* f = fopen("result.txt", "ab");
     for (int i=0; i<binaryString.size(); i+=8) {
         char q = 0;
         for (int j=7; j>=0; j--)
